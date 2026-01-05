@@ -30,7 +30,10 @@ public class Network {
      *  If there is no such user, returns null.
      *  Notice that the method receives a String, and returns a User object. */
     public User getUser(String name) {
-        //// Replace the following statement with your code
+        for (int i=0; i<userCount; i++){
+            if(this.users[i].getName().equals(name))
+                return this.users[i];
+        }
         return null;
     }
 
@@ -39,42 +42,84 @@ public class Network {
     *  If the given name is already a user in this network, does nothing and returns false;
     *  Otherwise, creates a new user with the given name, adds the user to this network, and returns true. */
     public boolean addUser(String name) {
-        //// Replace the following statement with your code
-        return false;
+        if(this.getUserCount()==this.users.length)
+            return false;
+        if (this.getUser(name)!=null)
+            return false;
+        this.users[this.getUserCount()]=new User(name);
+        this.userCount++;
+        return true;
     }
 
     /** Makes the user with name1 follow the user with name2. If successful, returns true.
      *  If any of the two names is not a user in this network,
      *  or if the "follows" addition failed for some reason, returns false. */
     public boolean addFollowee(String name1, String name2) {
-        //// Replace the following statement with your code
+        if (this.getUser(name1)==null||this.getUser(name2)==null)
+            return false;
+        if (this.getUser(name1).addFollowee(name2)&&this.getUser(name1).addFollowee(name2)){
+            this.getUser(name1).addFollowee(name2);
+            this.getUser(name2).addFollowee(name1);
+        }
         return false;
     }
     
     /** For the user with the given name, recommends another user to follow. The recommended user is
      *  the user that has the maximal mutual number of followees as the user with the given name. */
     public String recommendWhoToFollow(String name) {
-        //// Replace the following statement with your code
-        return null;
+        int max=this.users[0].countMutual(this.getUser(name));
+        User maximum=this.users[0];
+        for (int i=1; i<this.userCount; i++){
+            if (this.users[i].getName().equals(name)){
+                if (i<this.userCount)
+                    i++;
+                else
+                    return maximum.getName();
+            }
+            if (this.users[i].countMutual(this.getUser(name))>max){
+                max=this.users[i].countMutual(this.getUser(name));
+                maximum=this.users[i];
+            }
+        }
+        return maximum.getName();
     }
 
     /** Computes and returns the name of the most popular user in this network: 
      *  The user who appears the most in the follow lists of all the users. */
     public String mostPopularUser() {
-        //// Replace the following statement with your code
-        return null;
+        int [] a = new int [userCount];
+        for (int i=0; i<this.userCount; i++){
+            a[i]=followeeCount(this.users[i].getName());
+        }
+        int max=a[0];
+        int maxindex=0;
+        for (int j=1; j<a.length; j++){
+            if (a[j]>max){
+                max=a[j];
+                maxindex=j;
+            }
+        }
+        return this.users[maxindex].getName();
     }
 
     /** Returns the number of times that the given name appears in the follows lists of all
      *  the users in this network. Note: A name can appear 0 or 1 times in each list. */
     private int followeeCount(String name) {
-        //// Replace the following statement with your code
-        return 0;
+        int count =0;
+        for (int i=0;i<this.userCount; i++){
+            if (this.users[i].follows(name))
+                count++;
+        }
+        return count;
     }
 
     // Returns a textual description of all the users in this network, and who they follow.
     public String toString() {
-       //// Replace the following statement with your code
-       return null;
+    StringBuilder sb = new StringBuilder();
+    for (int i=0;i<this.userCount;i++){
+        sb.append(this.users[i].toString()).append("\n");
     }
+    return sb.toString();
+    } 
 }
+
