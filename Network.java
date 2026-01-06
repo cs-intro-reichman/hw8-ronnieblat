@@ -94,7 +94,7 @@ public class Network {
         int maxindex=0;
         for (int i=1; i<this.userCount; i++){
             int n=followeeCount(this.users[i].getName());
-            if (n>=max||(n==max&&this.users[i].getName().compareTo(this.users[maxindex].getName())<0)){
+            if (n>max||(n==max&&this.users[i].getName().compareTo(this.users[maxindex].getName())<0)){
                 max=n;
                 maxindex=i;
             }
