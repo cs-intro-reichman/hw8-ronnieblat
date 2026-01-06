@@ -55,7 +55,7 @@
     public boolean addFollowee(String name) {
         if (this.fCount==maxfCount)
             return false;
-        if (this.follows(name))
+        if (this.follows(name)||this.getName().equals(name))
             return false;
         this.follows[fCount]=name;
         this.fCount++;

@@ -69,14 +69,16 @@ public class Network {
         if (name==null)
             return null;
         User me= this.getUser(name);
-        int max=this.users[0].countMutual(this.getUser(name));
-        User maximum=this.users[0];
-        for (int i=1; i<this.userCount; i++){
+        int max=-1;
+        User maximum=null;
+        if (me==null) return null;
+        for (int i=0; i<this.userCount; i++){
             User u=this.users[i];
+            if (u==null) continue;
             if (u.getName().equals(name)) continue;
             if (me.follows(u.getName())) continue;
             if (u.countMutual(me)>max){
-                max=this.users[i].countMutual(this.getUser(name));
+                max=this.users[i].countMutual(me);
                 maximum=u;
             }
         }
@@ -88,12 +90,11 @@ public class Network {
      *  The user who appears the most in the follow lists of all the users. */
     public String mostPopularUser() {
         if (this.userCount==0) return null;
-        int [] a = new int [userCount];
-        int max=a[0];
+        int max=followeeCount(this.users[0].getName());
         int maxindex=0;
         for (int i=1; i<this.userCount; i++){
             int n=followeeCount(this.users[i].getName());
-            if (n>max){
+            if (n>=max){
                 max=n;
                 maxindex=i;
             }
